@@ -71,4 +71,5 @@ def get_donation_from_doner(name):
   return jsonify ({'message':'doner not found'})
 
 
-app.run(port=5000)
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
