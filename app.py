@@ -1,19 +1,29 @@
-from flask import Flask, Jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 
 doners = [{
     'name': 'Jacklebees',
-    'items': [{'name':'my item', 'price': 15.99 }]
-}]
+    'items': [{'name':'my item', 'quantity': 22 }]
+},
+    {'name': 'Pizza_smut',
+    'items': [{'name':'pizza', 'quantity': 3.14 }]
+},
+    {'name': 'McJackinthecrack',
+    'items': [{'name':'cheezzeeburgerz', 'quantity': 500 }]
+},
+    {'name': 'burrito_joes',
+    'items': [{'name':'taco', 'quantity': 42 }]
+}
+]
 
 #Home route to "hello Earth"
-@app.rount('/')
+@app.route('/')
 def home():
     return render_template('index.html')
 
-#post /sotre data: {name :}
-@app.route('/doner', method=['POST'])
+#post /sotre data:d {name :}
+@app.route('/doner', methods=['POST'])
 def create_doner():
     request_data = request.get_json()
     new_doner = {
@@ -26,7 +36,7 @@ def create_doner():
 # get /doners/<name> data: {name :}/
 @app.route('/doner/<string:name>')
 def get_doner(name):
-    for doner in donres:
+    for doner in doners:
         if doner['name']== name:
             return jsonify(doner)
     return jsonify({'message': 'doner not found'})
@@ -59,8 +69,6 @@ def get_donation_from_doner(name):
     if doner['name'] == name:
         return jsonify( {'items':doner['items'] } )
   return jsonify ({'message':'doner not found'})
-
-
 
 
 app.run(port=5000)
