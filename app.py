@@ -1,19 +1,23 @@
-from flask import Flask, Jsonify, request, render_template
-
+from flask import Flask, jsonify, request, render_template
+from flask_dropzone import Dropzone
 app = Flask(__name__)
-
+dropzone = Dropzone(app)
+app.config['DROPZONE_UPLOAD_MULTIPLE'] = True
+app.config['DROPZONE_ALLOWED_FILE_CUSTOM'] = True
+app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image/*'
+#app.config['DROPZONE_REDIRECT_VIEW'] = '?'
 doners = [{
     'name': 'Jacklebees',
     'items': [{'name':'my item', 'price': 15.99 }]
 }]
 
 #Home route to "hello Earth"
-@app.rount('/')
+@app.route('/')
 def home():
     return render_template('index.html')
 
 #post /sotre data: {name :}
-@app.route('/doner', method=['POST'])
+@app.route('/doner', methods=['POST'])
 def create_doner():
     request_data = request.get_json()
     new_doner = {
