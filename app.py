@@ -8,7 +8,6 @@ from db import db
 from resources.items import Item, ItemList
 from resources.doners import Doner, DonerList
 
-#mods
 
 
 #app
@@ -25,20 +24,8 @@ api = Api(app)
 def create_tables():
     db.create_all()
 
-# ************** USER MODEL****************
 
-
-
-
-
-
-
-# ************** USER Resource****************
-
-
-
-
-
+#
 #Routes
 api.add_resource(Doner, '/doner/<string:name>')
 api.add_resource(DonerList, '/')
