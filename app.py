@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 
 #mods
 from db import db
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 
 
 #app
@@ -23,6 +23,9 @@ api = Api(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
+
+
+# ************************************************
 
 #Doner model
 class DonerModel(db.Model):
@@ -66,33 +69,43 @@ class DonerModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+# ************************************************
 
 # item model
-# class ItemModel(db.Model):
-#     __tablename__ = 'items'
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(80))
-#     quantity = db.column(db.Intiger, required=True)
-#     # Forign keys
-#     doner_id = db.Column(db.Integer, db.ForeignKey('doner.id'))
-#     doner = db.relationship('DonerModel')
-#
-#     def json(self):
-#         return {
-#             'id': self.id,
-#             'name':
-#         }
+class ItemModel(db.Model):
+    __tablename__ = 'items'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    quantity = db.column(db.Intiger, required=True)
+    # Forign keys
+    doner_id = db.Column(db.Integer, db.ForeignKey('doner.id'))
+    doner = db.relationship('DonerModel')
 
+    def json(self):
+        return {
+            'id': self.id,
+            'name':self.name,
+            'quantity': self.quantity,
+            'doner_id': self.doner_id
+        }
 
+    @classmethod
+    def find_by_name(cls, name):
+        return cls.query.filter_by(name=name).first()
 
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
 
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
 
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
 
-
-
-
-
-
+# *************************************
 
 # Doner Resource
 class Doner(Resource):
@@ -130,13 +143,25 @@ class DonerList(Resource):
     def get(self):
         return {'doners': [x.json() for x in DonerModel.find_all()]}
 
-
+# ************************************************
 # item Resource
+class Item(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('price',
+                        type=float,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+    parser.add_argument('store_id',
+                        type=int,
+                        required=True,
+                        help="Every item needs a store_id."
 
 
 
 
 
+# ************************************************
 
 #Routes
 api.add_resource(Doner, '/doner/<string:name>')
