@@ -7,8 +7,9 @@ from flask_jwt_extended import JWTManager
 from db import db
 from resources.items import Item, ItemList
 from resources.doners import Doner, DonerList
+from resources.user import UserRegister, User, UserLogin, TokenRefresh, UserLogout
 from resources.organizations import Organization, OrgList
-#mods
+
 
 
 #app
@@ -25,28 +26,21 @@ api = Api(app)
 def create_tables():
     db.create_all()
 
-# ************** USER MODEL****************
 
-
-
-
-
-
-
-# ************** USER Resource****************
-
-
-
-
-
-#Routes
+#Doner Route
 api.add_resource(Doner, '/doner/<string:name>')
 api.add_resource(DonerList, '/')
+#Item Resource
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
+#User
+api.add_resource(UserRegister, '/register')
+api.add_resource(User, '/user/<int:user_id>')
+api.add_resource(UserLogin, '/login')
+api.add_resource(TokenRefresh, '/refresh')
+api.add_resource(UserLogout, '/logout')
 api.add_resource(Organization, '/organization/<string:name>')
 api.add_resource(OrgList, '/organizations')
-
 
 
 if __name__ == '__main__':
