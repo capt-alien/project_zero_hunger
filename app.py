@@ -20,7 +20,7 @@ doners = [{
 #Home route to "hello Earth"
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html', token='Flask + React')
 
 #post /sotre data:d {name :}
 @app.route('/doner', methods=['POST'])
