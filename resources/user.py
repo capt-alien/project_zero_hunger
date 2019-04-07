@@ -1,6 +1,5 @@
-#mods
-    # for resources/user
 from flask_restful import Resource, reqparse
+from hashlib import sha256
 from werkzeug.security import safe_str_cmp
 from flask_jwt_extended import (
     create_access_token,
@@ -8,16 +7,15 @@ from flask_jwt_extended import (
     jwt_refresh_token_required,
     get_jwt_identity,
     jwt_required,
-    get_raw_jwt
-)
-# from models.user import UserModel
-# from blacklist import BLACKLIST
+    get_raw_jwt)
 
+from models.user import UserModel
+# from blacklist import BLACKLIST
 
 # SALT AND HASH PASSWORD
 # print(os.environ)
 LAUNCH_CODE= "alien"
-salet = LAUNCH_CODE
+salt = LAUNCH_CODE
 # Set Launch code as local environ variable
 # salt = os.environ['LAUNCH_CODE']
 
@@ -27,7 +25,7 @@ def salt_n_hash(password):
 
 
 
- ************** USER Resource****************
+ # ************** USER Resource****************
 _user_parser = reqparse.RequestParser()
 _user_parser.add_argument('username',
                           type=str,
@@ -50,6 +48,7 @@ _user_parser.add_argument('password',
 class UserRegister(Resource):
     def post(self):
         data = _user_parser.parse_args()
+        print(data['username'], data['email'])
 
         if UserModel.find_by_username(data['username']):
             return {"message": "A user with that username already exists"}, 400
@@ -87,7 +86,7 @@ class UserLogin(Resource):
         user = UserModel.find_by_username(data['username'])
 
         # this is what the `authenticate()` function did in security.py
-        if user and safe_str_cmp(user.password, data['password']):
+        if user and safe_str_cmp(user.password, salt_n_hash(data['password'])):
             # identity= is what the identity() function did in security.py—now stored in the JWT
             access_token = create_access_token(identity=user.id, fresh=True)
             refresh_token = create_refresh_token(user.id)
