@@ -7,7 +7,9 @@ from flask_jwt_extended import (
     jwt_refresh_token_required,
     get_jwt_identity,
     jwt_required,
+    JWTManager,
     get_raw_jwt)
+
 
 from models.user import UserModel
 # from blacklist import BLACKLIST
@@ -81,9 +83,11 @@ class User(Resource):
 
 class UserLogin(Resource):
     def post(self):
+        print("*******test1*******")
         data = _user_parser.parse_args()
 
         user = UserModel.find_by_username(data['username'])
+        print("*******test2*******")
 
         # this is what the `authenticate()` function did in security.py
         if user and safe_str_cmp(user.password, salt_n_hash(data['password'])):
@@ -94,8 +98,11 @@ class UserLogin(Resource):
                 'access_token': access_token,
                 'refresh_token': refresh_token
             }, 200
+            print("*******test3*******")
+
 
         return {"message": "Invalid Credentials!"}, 401
+        print("*******test4*******")
 
 
 class UserLogout(Resource):
