@@ -34,18 +34,24 @@ _user_parser.add_argument('username',
                           required=True,
                           help="This field cannot be blank."
                           )
-
 _user_parser.add_argument('email',
                           type=str,
                           required=True,
                           help="This field cannot be blank."
                           )
-
 _user_parser.add_argument('password',
                           type=str,
                           required=True,
                           help="This field cannot be blank."
                           )
+_user_parser.add_argument('doner_id',
+                          type=int,
+                          required=False,
+                          )
+_user_parser.add_argument('org_id',
+                          type=int,
+                          required=False
+                         )
 
 class UserRegister(Resource):
     def post(self):

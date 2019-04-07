@@ -14,20 +14,20 @@ class Organization(Resource):
         organization = OrgModel.find_by_name(name)
         if organization:
             return organization.json()
-        return{'message':'Doner not found'}, 404
+        return{'message':'Org not found'}, 404
 
 
     def post(self, name):
         # Check to see if doner is in DB
         if OrgModel.find_by_name(name):
-            return {'message': "a Doner with name '{}'' already exists.".format(name)}, 400
+            return {'message': "a organization with name '{}'' already exists.".format(name)}, 400
             # if not instantiate it
         data = Organization.parser.parse_args()
         organization = OrgModel(name, **data)
         try:
             organization.save_to_db()
         except:
-            return {"message": "An error occurred creting the doner."}, 500
+            return {"message": "An error occurred creting the organization."}, 500
         return organization.json(), 201
 
 
@@ -36,7 +36,7 @@ class Organization(Resource):
         if organization:
             organization.delete_from_db()
 
-        return {'message': "Doner deleted"}
+        return {'message': "organization deleted"}
 
 class OrgList(Resource):
     def get(self):
