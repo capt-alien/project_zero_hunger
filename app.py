@@ -15,38 +15,38 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
-app.config['JWT_BLACKLIST_ENABLED'] = True  # enable blacklist feature
-app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']  # allow blacklisting for access and refresh tokens
-app.secret_key = 'alien'  # could do app.config['JWT_SECRET_KEY'] if we prefer
+# app.config['JWT_BLACKLIST_ENABLED'] = True  # enable blacklist feature
+# app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']  # allow blacklisting for access and refresh tokens
+# app.secret_key = 'alien'  # could do app.config['JWT_SECRET_KEY'] if we prefer
 api = Api(app)
 
 @app.before_first_request
 def create_tables():
     db.create_all()
 
-#Models
+#Doner model
 class DonerModel(db.Model):
     __tablename__ = 'doners'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
-    adress = db.Column(db.String(300))
-    email = db.Column(db.String(100))
+    address = db.Column(db.String(300), nullable = False)
+    # email = db.Column(db.String(120), unique=True, nullable=False)
 
 #nested resources
     # items = db.relationship(ItemModel, lazy='dynamic')
-
-
-
-    def __init__(self, name, adress, email):
+    def __init__(self, name):
         self.name = name
+        # self.address = address
+        # self.email = email
+
 
     def json(self):
         return {
         'id': self.id,
         'name': self.name,
-        'address': self.address,
-        'email': self.email
+        'address': self.address
+        # 'email': self.email
         # 'items': [item.json() for item in self.items.all()]
         }
 
@@ -67,9 +67,34 @@ class DonerModel(db.Model):
         db.session.commit()
 
 
+# item model
+# class ItemModel(db.Model):
+#     __tablename__ = 'items'
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(80))
+#     quantity = db.column(db.Intiger, required=True)
+#     # Forign keys
+#     doner_id = db.Column(db.Integer, db.ForeignKey('doner.id'))
+#     doner = db.relationship('DonerModel')
+#
+#     def json(self):
+#         return {
+#             'id': self.id,
+#             'name':
+#         }
 
 
-# Resources
+
+
+
+
+
+
+
+
+
+
+# Doner Resource
 class Doner(Resource):
     def get(self, name):
         doner = DonerModel.find_by_name(name)
@@ -104,6 +129,13 @@ class Doner(Resource):
 class DonerList(Resource):
     def get(self):
         return {'doners': [x.json() for x in DonerModel.find_all()]}
+
+
+# item Resource
+
+
+
+
 
 
 #Routes
