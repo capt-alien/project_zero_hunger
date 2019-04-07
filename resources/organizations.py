@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from models.doners import DonerModel
+from models.organizations import OrgModel
 
 # Doner Resource
 class Organization(Resource):
@@ -11,7 +11,7 @@ class Organization(Resource):
                         )
 
     def get(self, name):
-        organization = DonerModel.find_by_name(name)
+        organization = OrgModel.find_by_name(name)
         if organization:
             return organization.json()
         return{'message':'Doner not found'}, 404
@@ -19,11 +19,11 @@ class Organization(Resource):
 
     def post(self, name):
         # Check to see if doner is in DB
-        if OrganizationModel.find_by_name(name):
+        if OrgModel.find_by_name(name):
             return {'message': "a Doner with name '{}'' already exists.".format(name)}, 400
             # if not instantiate it
         data = Organization.parser.parse_args()
-        organization = OrganizationModel(name, **data)
+        organization = OrgModel(name, **data)
         try:
             organization.save_to_db()
         except:
@@ -32,12 +32,12 @@ class Organization(Resource):
 
 
     def delete(self, name):
-        organization = OrganizationModel.find_by_name(name)
+        organization = OrgModel.find_by_name(name)
         if organization:
             organization.delete_from_db()
 
         return {'message': "Doner deleted"}
 
-class OrganizationList(Resource):
+class OrgList(Resource):
     def get(self):
-        return {'Organizations': [x.json() for x in OrganizationModel.find_all()]}
+        return {'Organizations': [x.json() for x in OrgModel.find_all()]}

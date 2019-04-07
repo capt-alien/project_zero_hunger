@@ -1,7 +1,7 @@
 from db import db
 
 #Doner model
-class OrganizationModel(db.Model):
+class OrgModel(db.Model):
     __tablename__ = 'organizations'
 
     id = db.Column(db.Integer, primary_key=True)

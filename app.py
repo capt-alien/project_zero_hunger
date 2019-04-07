@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 from db import db
 from resources.items import Item, ItemList
 from resources.doners import Doner, DonerList
-from resources.organizations import Organization, OrganizationList
+from resources.organizations import Organization, OrgList
 #mods
 
 
@@ -45,7 +45,7 @@ api.add_resource(DonerList, '/')
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 api.add_resource(Organization, '/organization/<string:name>')
-api.add_resource(OrganizationList, '/organizations')
+api.add_resource(OrgList, '/organizations')
 
 
 
